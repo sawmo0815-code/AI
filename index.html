@@ -62,6 +62,16 @@
       padding: 32px 36px 28px;
       text-align: center;
     }
+    .profile-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ffffff;
+      box-shadow: 0 10px 24px rgba(8, 60, 80, 0.15);
+      margin: 6px auto 10px;
+      display: block;
+    }
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -178,6 +188,19 @@
       box-shadow: 0 8px 20px rgba(8, 60, 80, 0.12);
     }
     .icon-link img { width: 20px; height: 20px; display: block; }
+    .live2d-wrap {
+      width: min(320px, 80vw);
+      height: 420px;
+      margin: 12px auto 0;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid #c9e5f1;
+      overflow: hidden;
+    }
+    :root[data-theme="dark"] .live2d-wrap {
+      background: rgba(15, 38, 49, 0.6);
+      border-color: #244554;
+    }
 
     .meta { margin-top: 16px; font-size: 14px; color: var(--muted); }
     .embed { margin-top: 14px; text-align: center; }
@@ -185,6 +208,28 @@
 
     [data-lang] { display: none; }
     [data-lang].active { display: block; }
+
+    .to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid #c9e5f1;
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+    .to-top.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -195,10 +240,12 @@
         <button class="btn" id="lang-toggle" type="button">EN</button>
         <button class="btn" id="theme-toggle" type="button">Dark</button>
       </div>
-      <div class="meta">最終更新日：2026年2月9日</div>
+      <div class="meta" data-lang="ja">最終更新日：2026年2月9日</div>
+      <div class="meta" data-lang="en">Last updated: February 9, 2026</div>
     </div>
 
     <div data-lang="ja">
+      <img class="profile-img" src="selfie.jpg" alt="プロフィール画像" />
       <h1>澤田 桃花</h1>
       <div class="furigana">（さわだ　ももか）</div>
 
@@ -256,25 +303,15 @@
         </div>
       </section>
 
-      <section class="history section" id="latest-ja" aria-label="Instagram最新投稿">
-        <p class="history-title">Instagram 最新投稿</p>
-        <div class="embed">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/POST_ID/" data-instgrm-version="14"></blockquote>
-          <div class="note">最新投稿のURLに置き換えると埋め込み表示されます。</div>
-        </div>
-      </section>
-
       <a class="insta" href="https://www.instagram.com/momo_musica_?igsh=dzU4aDQ1OTlueDQx&utm_source=qr" target="_blank" rel="noopener noreferrer">
         <img src="Instagram_Glyph_Gradient.png" alt="Instagram" />
         Instagram
       </a>
-
-      <div class="meta">英語表示は右上の EN ボタンから切り替えできます。</div>
     </div>
 
     <div data-lang="en">
-      <h1>Momoka Sawada</h1>
-      <div class="furigana">(Sawada Momoka)</div>
+      <img class="profile-img" src="selfie.jpg" alt="Profile photo" />
+      <h1>Momoka SAWADA</h1>
 
       <div class="row"><span class="label">Affiliation:</span>Graduate School of Humanities, Nagoya University (Master's Course)</div>
       <div class="row"><span class="label">Field:</span>Modern German History</div>
@@ -330,28 +367,26 @@
         </div>
       </section>
 
-      <section class="history section" id="latest-en" aria-label="Latest Instagram Post">
-        <p class="history-title">Latest Instagram Post</p>
-        <div class="embed">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/POST_ID/" data-instgrm-version="14"></blockquote>
-          <div class="note">Replace with the latest post URL to embed.</div>
-        </div>
-      </section>
-
       <a class="insta" href="https://www.instagram.com/momo_musica_?igsh=dzU4aDQ1OTlueDQx&utm_source=qr" target="_blank" rel="noopener noreferrer">
         <img src="Instagram_Glyph_Gradient.png" alt="Instagram" />
         Instagram
       </a>
-
-      <div class="meta">Switch to Japanese with the JP button.</div>
     </div>
+    <section class="history section" id="live2d" aria-label="Live2D">
+      <p class="history-title">Live2D</p>
+      <div class="live2d-wrap" id="live2d-wrap">
+        <canvas id="live2d-canvas"></canvas>
+      </div>
+    </section>
   </main>
-
-  <script async src="https://www.instagram.com/embed.js"></script>
+  <button class="to-top" id="to-top" type="button" aria-label="ページ上部へ戻る">↑ Top</button>
+  <script src="https://unpkg.com/pixi.js@6/dist/browser/pixi.min.js"></script>
+  <script src="https://unpkg.com/pixi-live2d-display@0.4.0/dist/index.min.js"></script>
   <script>
     const langToggle = document.getElementById("lang-toggle");
     const themeToggle = document.getElementById("theme-toggle");
     const langBlocks = document.querySelectorAll("[data-lang]");
+    const toTop = document.getElementById("to-top");
 
     const setLang = (lang) => {
       langBlocks.forEach((el) => {
@@ -408,6 +443,68 @@
     }, { threshold: [0.1, 0.5, 1] });
 
     musicTargets.forEach((target) => observer.observe(target));
+
+    const toggleToTop = () => {
+      const show = window.scrollY > 300;
+      toTop.classList.toggle("show", show);
+    };
+    toggleToTop();
+    window.addEventListener("scroll", toggleToTop, { passive: true });
+    toTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    const initLive2D = async () => {
+      if (!window.PIXI || !PIXI.live2d) return;
+      const wrap = document.getElementById("live2d-wrap");
+      const canvas = document.getElementById("live2d-canvas");
+      if (!wrap || !canvas) return;
+
+      const app = new PIXI.Application({
+        view: canvas,
+        autoStart: true,
+        backgroundAlpha: 0,
+        resizeTo: wrap
+      });
+
+      const modelPath = "./Momoka Live2D/iphone Momoka/Live 2d momoka.model3.json";
+      const model = await PIXI.live2d.Live2DModel.from(encodeURI(modelPath), { autoInteract: false });
+      app.stage.addChild(model);
+
+      model.anchor.set(0.5, 0.5);
+      const fitModel = () => {
+        const { width, height } = app.renderer;
+        model.position.set(width * 0.5, height * 0.85);
+        model.scale.set(Math.min(width / 600, height / 900) * 1.2);
+      };
+      fitModel();
+      window.addEventListener("resize", fitModel);
+
+      const setParam = (id, value) => {
+        try {
+          model.internalModel.coreModel.setParameterValueById(id, value);
+        } catch {}
+      };
+
+      const updateLook = (x, y) => {
+        const rect = wrap.getBoundingClientRect();
+        const dx = ((x - rect.left) / rect.width - 0.5) * 2;
+        const dy = ((y - rect.top) / rect.height - 0.5) * 2;
+        setParam("ParamAngleX", dx * 30);
+        setParam("ParamAngleY", -dy * 25);
+        setParam("ParamBodyAngleX", dx * 10);
+        setParam("ParamEyeBallX", dx);
+        setParam("ParamEyeBallY", -dy);
+      };
+
+      wrap.addEventListener("pointermove", (event) => updateLook(event.clientX, event.clientY));
+      wrap.addEventListener("pointerleave", () => {
+        const rect = wrap.getBoundingClientRect();
+        updateLook(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      });
+    };
+
+    window.addEventListener("load", initLive2D);
   </script>
 </body>
 </html>
