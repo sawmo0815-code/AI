@@ -1,0 +1,413 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>澤田 桃花｜研究テーマ</title>
+  <style>
+    :root {
+      --bg: #d8f1fb;
+      --card: #ffffff;
+      --text: #12323b;
+      --muted: #3d5660;
+      --accent: #0f8db8;
+      --bg-music: linear-gradient(135deg, #f9e7ff 0%, #d9f3ff 45%, #ffe8c9 100%);
+      --shadow: 0 20px 50px rgba(8, 60, 80, 0.12);
+      --chip: #f0f9fd;
+    }
+    :root[data-theme="dark"] {
+      --bg: #0c1b24;
+      --card: #0f2631;
+      --text: #e6f3f7;
+      --muted: #a7c0c8;
+      --accent: #7dd1f0;
+      --bg-music: linear-gradient(135deg, #2a0e36 0%, #0e2d3d 45%, #3b1e0a 100%);
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      --chip: #153241;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      transition: background 500ms ease;
+    }
+    body.music-mode {
+      background: var(--bg-music);
+    }
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 12px;
+      background: var(--card);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .skip-link:focus { left: 12px; }
+
+    .card {
+      width: min(900px, 92vw);
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 32px 36px 28px;
+      text-align: center;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .controls { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      border: 1px solid #c9e5f1;
+      background: var(--card);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(8, 60, 80, 0.12);
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(32px, 4vw, 44px);
+      letter-spacing: 0.06em;
+    }
+    .furigana {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .row {
+      margin: 10px 0;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    .label {
+      font-weight: 600;
+      color: var(--accent);
+      margin-right: 6px;
+    }
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 16px 0 20px;
+    }
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--chip);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+    .nav a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(8, 60, 80, 0.12);
+    }
+    .section { scroll-margin-top: 100px; }
+
+    .history {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: #f4fbfe;
+      border-radius: 12px;
+      text-align: left;
+      color: var(--text);
+    }
+    :root[data-theme="dark"] .history { background: #132f3d; }
+    .history-title {
+      margin: 0 0 8px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .history ul { margin: 0; padding-left: 18px; }
+    .history li { margin: 6px 0; }
+
+    .insta {
+      margin-top: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid #c9e5f1;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--card);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+    .insta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(8, 60, 80, 0.12);
+    }
+    .insta img { width: 24px; height: 24px; display: block; }
+    .icon-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #c9e5f1;
+      background: var(--card);
+      text-decoration: none;
+      color: var(--text);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+    .icon-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(8, 60, 80, 0.12);
+    }
+    .icon-link img { width: 20px; height: 20px; display: block; }
+
+    .meta { margin-top: 16px; font-size: 14px; color: var(--muted); }
+    .embed { margin-top: 14px; text-align: center; }
+    .embed .note { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+    [data-lang] { display: none; }
+    [data-lang].active { display: block; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#profile">本文へ</a>
+  <main class="card" id="profile">
+    <div class="topbar">
+      <div class="controls">
+        <button class="btn" id="lang-toggle" type="button">EN</button>
+        <button class="btn" id="theme-toggle" type="button">Dark</button>
+      </div>
+      <div class="meta">最終更新日：2026年2月9日</div>
+    </div>
+
+    <div data-lang="ja">
+      <h1>澤田 桃花</h1>
+      <div class="furigana">（さわだ　ももか）</div>
+
+      <div class="row"><span class="label">所属：</span>名古屋大学大学院人文学研究科博士課程前期課程</div>
+      <div class="row"><span class="label">専門分野：</span>近代ドイツ史</div>
+
+      <nav class="nav" aria-label="ページ内リンク">
+        <a href="#career-ja">経歴</a>
+        <a href="#achievements-ja">業績</a>
+        <a href="#certs-ja">資格</a>
+        <a href="#music-ja">音楽活動</a>
+      </nav>
+
+      <section class="history section" id="career-ja" aria-label="経歴">
+        <p class="history-title">経歴</p>
+        <ul>
+          <li>2022年3月　愛知大学文学部人文社会学科・卒業</li>
+          <li>2023年4月〜　名古屋大学大学院人文学研究科博士課程前期課程・在学中</li>
+        </ul>
+      </section>
+
+      <section class="history section" id="achievements-ja" aria-label="業績">
+        <p class="history-title">業績</p>
+        <ul>
+          <li>［口頭発表］「フンボルト理念の再検討：ベルリン大学における像の建立と理念の創造」教育を語る会、明治大学、2025年11月22日</li>
+        </ul>
+      </section>
+
+      <section class="history section" id="certs-ja" aria-label="資格">
+        <p class="history-title">資格</p>
+        <ul>
+          <li>現在記載なし</li>
+        </ul>
+      </section>
+
+      <section class="history section" id="music-ja" aria-label="音楽活動">
+        <p class="history-title">音楽活動</p>
+        <ul>
+          <li>幼少期からピアノに親しむ。</li>
+          <li>高校生の時に、エレキベースをはじめ、ライブハウスでセッション経験を重ねる。</li>
+          <li>大学生では民族音楽に興味を持ち、大須でラテンアメリカの楽器講師を務める。</li>
+          <li>現在は、オリジナルバンド「Milos」でヴォーカルとベース、バンドネオンを務める。</li>
+        </ul>
+        <div class="row">
+          <span class="label">Milos：</span>
+          <a class="icon-link" href="https://www.instagram.com/milos_officialglam?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" aria-label="Milos Instagram">
+            <img src="Instagram_Glyph_Gradient.png" alt="Instagram" />
+          </a>
+        </div>
+        <div class="row">
+          <span class="label">講師店舗：</span>
+          <a class="icon-link" href="https://www.instagram.com/pukio.jp?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" aria-label="講師店舗 Instagram">
+            <img src="Instagram_Glyph_Gradient.png" alt="Instagram" />
+          </a>
+        </div>
+      </section>
+
+      <section class="history section" id="latest-ja" aria-label="Instagram最新投稿">
+        <p class="history-title">Instagram 最新投稿</p>
+        <div class="embed">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/POST_ID/" data-instgrm-version="14"></blockquote>
+          <div class="note">最新投稿のURLに置き換えると埋め込み表示されます。</div>
+        </div>
+      </section>
+
+      <a class="insta" href="https://www.instagram.com/momo_musica_?igsh=dzU4aDQ1OTlueDQx&utm_source=qr" target="_blank" rel="noopener noreferrer">
+        <img src="Instagram_Glyph_Gradient.png" alt="Instagram" />
+        Instagram
+      </a>
+
+      <div class="meta">英語表示は右上の EN ボタンから切り替えできます。</div>
+    </div>
+
+    <div data-lang="en">
+      <h1>Momoka Sawada</h1>
+      <div class="furigana">(Sawada Momoka)</div>
+
+      <div class="row"><span class="label">Affiliation:</span>Graduate School of Humanities, Nagoya University (Master's Course)</div>
+      <div class="row"><span class="label">Field:</span>Modern German History</div>
+
+      <nav class="nav" aria-label="On-page links">
+        <a href="#career-en">Career</a>
+        <a href="#achievements-en">Achievements</a>
+        <a href="#certs-en">Qualifications</a>
+        <a href="#music-en">Music</a>
+      </nav>
+
+      <section class="history section" id="career-en" aria-label="Career">
+        <p class="history-title">Career</p>
+        <ul>
+          <li>Mar 2022 — Graduated from Aichi University, Faculty of Letters, Department of Humanities and Social Sciences</li>
+          <li>Apr 2023 — Enrolled in the Master's Course, Graduate School of Humanities, Nagoya University</li>
+        </ul>
+      </section>
+
+      <section class="history section" id="achievements-en" aria-label="Achievements">
+        <p class="history-title">Achievements</p>
+        <ul>
+          <li>[Oral Presentation] "Reconsidering the Humboldtian Ideal: The Erection of the Humboldt Statue and the Creation of an Ideal at the University of Berlin," Education Forum, Meiji University, Nov 22, 2025</li>
+        </ul>
+      </section>
+
+      <section class="history section" id="certs-en" aria-label="Qualifications">
+        <p class="history-title">Qualifications</p>
+        <ul>
+          <li>Not listed yet</li>
+        </ul>
+      </section>
+
+      <section class="history section" id="music-en" aria-label="Music">
+        <p class="history-title">Music</p>
+        <ul>
+          <li>Played piano since childhood.</li>
+          <li>Started electric bass in high school and gained session experience in live houses.</li>
+          <li>Became interested in ethnomusicology in university and taught Latin American instruments in Osu.</li>
+          <li>Currently serves as vocalist, bassist, and bandoneon player in the original band "Milos".</li>
+        </ul>
+        <div class="row">
+          <span class="label">Milos:</span>
+          <a class="icon-link" href="https://www.instagram.com/milos_officialglam?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" aria-label="Milos Instagram">
+            <img src="Instagram_Glyph_Gradient.png" alt="Instagram" />
+          </a>
+        </div>
+        <div class="row">
+          <span class="label">Instructor Venue:</span>
+          <a class="icon-link" href="https://www.instagram.com/pukio.jp?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" aria-label="Instructor Venue Instagram">
+            <img src="Instagram_Glyph_Gradient.png" alt="Instagram" />
+          </a>
+        </div>
+      </section>
+
+      <section class="history section" id="latest-en" aria-label="Latest Instagram Post">
+        <p class="history-title">Latest Instagram Post</p>
+        <div class="embed">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/POST_ID/" data-instgrm-version="14"></blockquote>
+          <div class="note">Replace with the latest post URL to embed.</div>
+        </div>
+      </section>
+
+      <a class="insta" href="https://www.instagram.com/momo_musica_?igsh=dzU4aDQ1OTlueDQx&utm_source=qr" target="_blank" rel="noopener noreferrer">
+        <img src="Instagram_Glyph_Gradient.png" alt="Instagram" />
+        Instagram
+      </a>
+
+      <div class="meta">Switch to Japanese with the JP button.</div>
+    </div>
+  </main>
+
+  <script async src="https://www.instagram.com/embed.js"></script>
+  <script>
+    const langToggle = document.getElementById("lang-toggle");
+    const themeToggle = document.getElementById("theme-toggle");
+    const langBlocks = document.querySelectorAll("[data-lang]");
+
+    const setLang = (lang) => {
+      langBlocks.forEach((el) => {
+        el.classList.toggle("active", el.getAttribute("data-lang") === lang);
+      });
+      langToggle.textContent = lang === "ja" ? "EN" : "JP";
+      document.documentElement.setAttribute("lang", lang);
+    };
+
+    const setTheme = (theme) => {
+      document.documentElement.setAttribute("data-theme", theme);
+      themeToggle.textContent = theme === "dark" ? "Light" : "Dark";
+    };
+
+    const storedLang = localStorage.getItem("lang") || "ja";
+    const storedTheme = localStorage.getItem("theme") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+    setLang(storedLang);
+    setTheme(storedTheme);
+
+    langToggle.addEventListener("click", () => {
+      const next = document.documentElement.getAttribute("lang") === "ja" ? "en" : "ja";
+      localStorage.setItem("lang", next);
+      setLang(next);
+    });
+
+    themeToggle.addEventListener("click", () => {
+      const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      localStorage.setItem("theme", next);
+      setTheme(next);
+    });
+
+    const musicTargets = [
+      document.getElementById("music-ja"),
+      document.getElementById("music-en")
+    ].filter(Boolean);
+
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", (event) => {
+        const id = anchor.getAttribute("href").slice(1);
+        const target = document.getElementById(id);
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.find((entry) => entry.isIntersecting && entry.target.offsetParent !== null);
+      if (!visible) return;
+      const active = visible.boundingClientRect.top < window.innerHeight * 0.5;
+      document.body.classList.toggle("music-mode", active);
+    }, { threshold: [0.1, 0.5, 1] });
+
+    musicTargets.forEach((target) => observer.observe(target));
+  </script>
+</body>
+</html>
